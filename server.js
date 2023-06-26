@@ -2,6 +2,8 @@
 const express = require('express');
 const cors = require('cors');
 const axios = require("axios");
+// const pg = require('pg');
+
 require("dotenv").config();
 
 const data = require("./Movie Data/data.json");
@@ -58,7 +60,7 @@ app.get("/trending", async (req, res) => {
     "release_date": result.release_date || result.first_air_date,
     "poster_path": result.poster_path,
     "overview": result.overview
-  })); ;
+  }));
 
  
 res.send(myData);
@@ -85,8 +87,8 @@ res.send(myData);
 app.get("/search", async (req, res) => {
   // let axiosResponse = await axios.get(`https://api.themoviedb.org/3/search/movie?api_key=${process.env.SECRET_API}&language=en-US&query=The&page=2`);
   // res.send(axiosResponse.data);
-  let { movieName } = req.query; 
-
+  let movieName  = req.query.query; 
+  // console.log(req.query);
   let axiosResponse = await axios.get(`https://api.themoviedb.org/3/search/movie?api_key=${process.env.SECRET_API}&language=en-US&query=${movieName}&page=2`);
   let allmovie = axiosResponse.data.results;
   let movies = allmovie.map((result) => ({
@@ -98,9 +100,9 @@ app.get("/search", async (req, res) => {
   }));
 
   res.send(movies);
-
-
 });
+
+
 
 app.use(handleNotFound);
 
