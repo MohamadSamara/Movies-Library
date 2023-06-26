@@ -2,7 +2,7 @@
 const express = require('express');
 const cors = require('cors');
 const axios = require("axios");
-// const pg = require('pg');
+const pg = require('pg');
 
 require("dotenv").config();
 
@@ -10,10 +10,18 @@ const data = require("./Movie Data/data.json");
 
 const app = express();
 app.use(cors());
-app.listen(3000 ,startingLog)
-function startingLog(req , res){
+app.use(express.json()); // parse the body from req
+
+const DB_URL = process.env.DATABASE_URL;
+const client = new pg.Client(DB_URL);
+
+client.connect().then(()=>{
+
+    app.listen(3000 , ()=>{
     console.log("Running at 3000 Port");
-}
+        });
+});
+
 
 
 app.get("/" , handleHome);
@@ -88,6 +96,7 @@ app.get("/search", async (req, res) => {
   // let axiosResponse = await axios.get(`https://api.themoviedb.org/3/search/movie?api_key=${process.env.SECRET_API}&language=en-US&query=The&page=2`);
   // res.send(axiosResponse.data);
   let movieName  = req.query.query; 
+  // console.log(movieName);
   // console.log(req.query);
   let axiosResponse = await axios.get(`https://api.themoviedb.org/3/search/movie?api_key=${process.env.SECRET_API}&language=en-US&query=${movieName}&page=2`);
   let allmovie = axiosResponse.data.results;
@@ -102,7 +111,30 @@ app.get("/search", async (req, res) => {
   res.send(movies);
 });
 
+app.get("/getMovies" , (req , res)=>{
+  let sql = `select * from movie`;
+  client.query(sql).then((movData)=>{
+    res.status(200).send(movData.rows);
+  });
 
+
+});
+
+app.post("/addMovie" , (req , res)=>{
+
+  let title = req.body.t;
+  let release_date = req.body.r;
+  let poster_path = req.body.p;
+  let overview = req.body.o; 
+
+  let sql = `insert into movie(title,release_dat,poster_path,overview) values($1,$2,$3,$4)`;
+  client.query(sql,[title,release_date,poster_path,overview]).then(()=>{
+    res.status(201).send(`movie ${title} added`);
+  })
+
+  // res.send(req.body);
+
+});
 
 app.use(handleNotFound);
 

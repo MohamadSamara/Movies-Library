@@ -6,7 +6,7 @@
 
 ## WRRC
 
-![WRRC](./assets/WRRC2.png)
+![WRRC](./assets/WRRC3.png)
 
 ## Overview
 
@@ -23,7 +23,20 @@ follow these steps:
 5. Set up environment variables:
       - Create `.env` file in the project and add `SECRET_API=c1af319ddec837daad4a88728e24a468`
 6. if you need to return all movies just use `http://localhost:3000/trending`
-7. if you need to Search for a movie name use `http://localhost:3000/search?movieName=(the name you want)`
+7. if you need to Search for a movie name use `http://localhost:3000/search?query=(the name you want)`
+8. if you need to add movie use `http://localhost:3000/addMovie` (with post request) and inside body send :
+            {
+            "t": "title",
+            "r": "release_dat",
+            "p": "poster_path",
+            "o": "overview"
+            }
+
+9. if you need to return all movies in the database use  `http://localhost:3000/getMovies`( with get request)
+
+            My DataBase => Name : movies ,
+                     Table : movie ,
+                     Cloumns : ( id , title , release_dat , poster_path , overview)
 
 ## Project Features
 
@@ -35,13 +48,21 @@ follow these steps:
 
       Returns a welcome message for the favorite page
 
-- **Favorite Page Endpoint: `/trending`**
+- **trending Page Endpoint: `/trending`**
 
       Returns the trending movies data as object from the Movie DB API
 
-- **Favorite Page Endpoint: `/search`**
+- **search Page Endpoint: `/search`**
 
       Search for a movie name to get its information
+
+- **getMovies Page Endpoint: `/getMovies`**
+
+      Create a get request to get all the data from the database
+
+- **addMovie Page Endpoint: `/addMovie`**
+
+      create a post request to save a specific movie to database
 
 - **Error Handling:**
 
