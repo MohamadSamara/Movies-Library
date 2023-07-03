@@ -33,6 +33,15 @@ follow these steps:
             }
 
 9. if you need to return all movies in the database use  `http://localhost:3000/getMovies`( with get request)
+10. if you need to Update specific movie use `http://localhost:3000/UPDATE/(movieId)` (with put request) and inside body send :
+            {
+            "title": " The value to update ",
+            "release_data": " The value to update ",
+            "poster_path": " The value to update ",
+            "overview": " The value to update "
+            }
+11. if you need to delete specific movie use `http://localhost:3000/DELETE(movieId)` (with delete request)
+12. if you need to get specific movie use `http://localhost:3000/getMovie(movieId)`
 
             My DataBase => Name : movies ,
                      Table : movie ,
@@ -63,6 +72,15 @@ follow these steps:
 - **addMovie Page Endpoint: `/addMovie`**
 
       create a post request to save a specific movie to database
+
+- **Update Movie Endpoint: `/UPDATE/id`**
+      create an update request to update a specific movie in the database
+
+- **Delete Movie Endpoint: `/DELETE/id`**
+       create a delete request to remove a specific movie from database
+
+- **addMovie Endpoint: `/getMovie/id`**
+       Create a get request to get a specific movie from the database
 
 - **Error Handling:**
 
