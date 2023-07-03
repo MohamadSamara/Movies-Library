@@ -136,6 +136,33 @@ app.post("/addMovie" , (req , res)=>{
 
 });
 
+
+app.delete("/DELETE/:id" , (req , res)=>{
+  let {id} = req.params;
+  let sql = `delete from movie where id=${id}`;
+  client.query(sql).then(()=>{
+  res.status(200).send("deleted successfully");
+  })
+});
+
+app.get("/getMovie/:id" , (req , res)=>{
+  let {id} = req.params;
+  let sql = `select * from movie where id=${id}`;
+  client.query(sql).then((movieData)=>{
+  res.status(200).send(movieData.rows);
+  })
+});
+
+app.put("/UPDATE/:id" , (req , res)=>{
+  let {id} = req.params;
+  let {title,release_date,poster_path,overview}=req.body;
+  let sql = `UPDATE movie SET title=$1,release_dat=$2,poster_path=$3,overview=$4 where id=${id}`; 
+  client.query(sql , [title,release_date,poster_path,overview]).then(()=>{
+    res.status(200).send("updated successfully");
+  }) 
+})
+
+
 app.use(handleNotFound);
 
 function handleNotFound(req , res , next) {
