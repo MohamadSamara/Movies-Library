@@ -21,7 +21,7 @@ Router.post("/addMovie" , (req , res, next)=>{
     let poster_path = req.body.poster_path;
     let overview = req.body.overview; 
   
-    let sql = `insert into movie(title,release_dat,poster_path,overview) values($1,$2,$3,$4)`;
+    let sql = `insert into movie(title,release_date,poster_path,overview) values($1,$2,$3,$4)`;
     client.query(sql,[title,release_date,poster_path,overview]).then(()=>{
       res.status(201).send(`movie ${title} added`);
     }) 
