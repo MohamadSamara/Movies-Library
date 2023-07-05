@@ -39,26 +39,6 @@ function handleFavorite(req ,res){
     res.send("Welcome to Favorite Page");
 }
 
-// app.use((req, res, next) => {
-//   if (req.query.api_key) {
-//     next();
-//   } else {
-//     next("Wrong authentication");
-//   }
-// });
-
-// https://api.themoviedb.org/3/trending/all/week?api_key=c1af319ddec837daad4a88728e24a468&language=en-US
-
-
-// function myDataa(){
-//  const myData = axiosResponse.results.map((result) => ({
-//     "id": result.id,
-//     "title": result.title,
-//     "release_date": result.release_date,
-//     "poster_path": result.poster_path,
-//     "overview": result.overview
-//   }));
-// }
 
 app.get("/trending", async (req, res) => {
   let axiosResponse = await axios.get(`https://api.themoviedb.org/3/trending/all/week?api_key=${process.env.SECRET_API}&language=en-US`);
@@ -69,25 +49,7 @@ app.get("/trending", async (req, res) => {
     "poster_path": result.poster_path,
     "overview": result.overview
   }));
-
- 
 res.send(myData);
-
-
-// let axiosResponse = await axios.get(`https://api.themoviedb.org/3/trending/all/week?api_key=${process.env.SECRET_API}&language=en-US`);
-// let myData = axiosResponse.data.results;
-
-// let x = myData.map((result) => ({
-//   "id": result.id,
-//   "title": result.title || result.name, // Adjust for different types of media (movie, TV show, etc.)
-//   "release_date": result.release_date || result.first_air_date, // Adjust for different types of media (movie, TV show, etc.)
-//   "poster_path": result.poster_path,
-//   "overview": result.overview
-// }));
-
-// res.send(x);
-
-
 });
 //https://api.themoviedb.org/3/movie/550/recommendations?api_key=c1af319ddec837daad4a88728e24a468
 app.get("/recommendations", async (req, res) => {
@@ -120,11 +82,7 @@ res.send(myData);
 //https://api.themoviedb.org/3/search/movie?api_key=668baa4bb128a32b82fe0c15b21dd699&language=en-US&query=The&page=2
 
 app.get("/search", async (req, res) => {
-  // let axiosResponse = await axios.get(`https://api.themoviedb.org/3/search/movie?api_key=${process.env.SECRET_API}&language=en-US&query=The&page=2`);
-  // res.send(axiosResponse.data);
   let movieName  = req.query.query; 
-  // console.log(movieName);
-  // console.log(req.query);
   let axiosResponse = await axios.get(`https://api.themoviedb.org/3/search/movie?api_key=${process.env.SECRET_API}&language=en-US&query=${movieName}&page=2`);
   let allmovie = axiosResponse.data.results;
   let movies = allmovie.map((result) => ({
@@ -138,29 +96,51 @@ app.get("/search", async (req, res) => {
   res.send(movies);
 });
 
+//https://api.themoviedb.org/3/movie/550/recommendations?api_key=c1af319ddec837daad4a88728e24a468
+app.get("/recommendations", async (req, res) => {
+  let axiosResponse = await axios.get(`https://api.themoviedb.org/3/movie/550/recommendations?api_key=${process.env.SECRET_API}`);
+  let myData = axiosResponse.data.results.map((result) => ({
+    "id": result.id,
+    "title": result.title || result.name,
+    "release_date": result.release_date || result.first_air_date,
+    "poster_path": result.poster_path,
+    "overview": result.overview
+  }));
+res.send(myData);
+});
+
+//https://api.themoviedb.org/3/discover/movie?api_key=37ddc7081e348bf246a42f3be2b3dfd0&include_adult=false&include_video=false&language=en-US&page=1&sort_by=vote_average.desc&without_genres=99,10755&vote_count.gte=200
+
+app.get("/topRated", async (req, res) => {
+  let axiosResponse = await axios.get(`https://api.themoviedb.org/3/discover/movie?api_key=${process.env.SECRET_API}&include_adult=false&include_video=false&language=en-US&page=1&sort_by=vote_average.desc&without_genres=99,10755&vote_count.gte=200`);
+  let myData = axiosResponse.data.results.map((result) => ({
+    "id": result.id,
+    "title": result.title || result.name,
+    "release_date": result.release_date || result.first_air_date,
+    "poster_path": result.poster_path,
+    "overview": result.overview
+  }));
+res.send(myData);
+});
+
 app.get("/getMovies" , (req , res)=>{
   let sql = `select * from movie`;
   client.query(sql).then((movData)=>{
     res.status(200).send(movData.rows);
   });
-
-
 });
 
 app.post("/addMovie" , (req , res)=>{
 
-  let title = req.body.t;
-  let release_date = req.body.r;
-  let poster_path = req.body.p;
-  let overview = req.body.o; 
+  let title = req.body.title;
+  let release_date = req.body.release_date;
+  let poster_path = req.body.poster_path;
+  let overview = req.body.overview; 
 
   let sql = `insert into movie(title,release_dat,poster_path,overview) values($1,$2,$3,$4)`;
   client.query(sql,[title,release_date,poster_path,overview]).then(()=>{
     res.status(201).send(`movie ${title} added`);
   })
-
-  // res.send(req.body);
-
 });
 
 
@@ -200,7 +180,6 @@ function handleNotFound(req , res , next) {
   });
 }
 
-
 // Handle server error (status 500)
 app.use(handleError);
 
@@ -212,23 +191,3 @@ function handleError(err, req, res, next) {
       error: err
     }); 
 }
-
-
-
-
-
-//   const fetch = require('node-fetch');
-
-// const url = 'https://api.themoviedb.org/3/configuration';
-// const options = {
-//   method: 'GET',
-//   headers: {
-//     accept: 'application/json',
-//     Authorization: 'Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJjMWFmMzE5ZGRlYzgzN2RhYWQ0YTg4NzI4ZTI0YTQ2OCIsInN1YiI6IjY0OTMxMzVmNzA2ZTU2MDEzYTY1M2RjZSIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.IqoVvF8jMqjkhspI-wz66OHsieej0QxPtxVjH_gog30'
-//   }
-// };
-
-// fetch(url, options)
-//   .then(res => res.json())
-//   .then(json => console.log(json))
-//   .catch(err => console.error('error:' + err));
