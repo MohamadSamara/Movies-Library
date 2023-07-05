@@ -43,6 +43,7 @@ app.get("/search", async (req, res) => {
   res.send(movies);
 });
 
+//https://api.themoviedb.org/3/movie/550/recommendations?api_key=c1af319ddec837daad4a88728e24a468
 app.get("/recommendations", async (req, res) => {
   let axiosResponse = await axios.get(`https://api.themoviedb.org/3/movie/550/recommendations?api_key=${process.env.SECRET_API}`);
   let myData = axiosResponse.data.results.map((result) => ({
