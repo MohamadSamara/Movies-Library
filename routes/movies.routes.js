@@ -21,7 +21,7 @@ Router.post("/addMovie" , (req , res, next)=>{
     let poster_path = req.body.poster_path;
     let overview = req.body.overview; 
   
-    let sql = `insert into movie(title,release_dat,poster_path,overview) values($1,$2,$3,$4)`;
+    let sql = `insert into movie(title,release_date,poster_path,overview) values($1,$2,$3,$4)`;
     client.query(sql,[title,release_date,poster_path,overview]).then(()=>{
       res.status(201).send(`movie ${title} added`);
     }) 
@@ -58,7 +58,7 @@ Router.put("/UPDATE/:id" , (req , res, next)=>{
   try {
       let {id} = req.params;
       let {title,release_date,poster_path,overview}=req.body;
-      let sql = `UPDATE movie SET title=$1,release_dat=$2,poster_path=$3,overview=$4 where id=${id}`; 
+      let sql = `UPDATE movie SET title=$1,release_date=$2,poster_path=$3,overview=$4 where id=${id}`; 
       client.query(sql , [title,release_date,poster_path,overview]).then(()=>{
       res.status(200).send("updated successfully");
   }) 
