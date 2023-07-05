@@ -77,6 +77,3 @@ client.connect().then(()=>{
   console.log(`Running at ${PORT} Port`);
       });
 });
-
-// module.exports = client;
-
