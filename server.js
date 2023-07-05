@@ -47,7 +47,35 @@ app.get("/trending", async (req, res) => {
     "overview": result.overview
   }));
 res.send(myData);
+
 });
+//https://api.themoviedb.org/3/movie/550/recommendations?api_key=c1af319ddec837daad4a88728e24a468
+app.get("/recommendations", async (req, res) => {
+  let axiosResponse = await axios.get(`https://api.themoviedb.org/3/movie/550/recommendations?api_key=${process.env.SECRET_API}`);
+  let myData = axiosResponse.data.results.map((result) => ({
+    "id": result.id,
+    "title": result.title || result.name,
+    "release_date": result.release_date || result.first_air_date,
+    "poster_path": result.poster_path,
+    "overview": result.overview
+  }));
+res.send(myData);
+});
+
+//https://api.themoviedb.org/3/discover/movie?api_key=37ddc7081e348bf246a42f3be2b3dfd0&include_adult=false&include_video=false&language=en-US&page=1&sort_by=vote_average.desc&without_genres=99,10755&vote_count.gte=200
+
+app.get("/topRated", async (req, res) => {
+  let axiosResponse = await axios.get(`https://api.themoviedb.org/3/discover/movie?api_key=${process.env.SECRET_API}&include_adult=false&include_video=false&language=en-US&page=1&sort_by=vote_average.desc&without_genres=99,10755&vote_count.gte=200`);
+  let myData = axiosResponse.data.results.map((result) => ({
+    "id": result.id,
+    "title": result.title || result.name,
+    "release_date": result.release_date || result.first_air_date,
+    "poster_path": result.poster_path,
+    "overview": result.overview
+  }));
+res.send(myData);
+});
+
 
 //https://api.themoviedb.org/3/search/movie?api_key=668baa4bb128a32b82fe0c15b21dd699&language=en-US&query=The&page=2
 
@@ -97,15 +125,14 @@ app.get("/getMovies" , (req , res)=>{
   client.query(sql).then((movData)=>{
     res.status(200).send(movData.rows);
   });
-
-
 });
 
 app.post("/addMovie" , (req , res)=>{
+
   let title = req.body.title;
   let release_date = req.body.release_date;
   let poster_path = req.body.poster_path;
-  let overview = req.body.overview;  
+  let overview = req.body.overview; 
 
   let sql = `insert into movie(title,release_dat,poster_path,overview) values($1,$2,$3,$4)`;
   client.query(sql,[title,release_date,poster_path,overview]).then(()=>{
@@ -149,7 +176,6 @@ function handleNotFound(req , res , next) {
     responseText: "Page not found"
   });
 }
-
 
 // Handle server error (status 500)
 app.use(handleError);
