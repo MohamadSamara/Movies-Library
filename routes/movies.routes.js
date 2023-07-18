@@ -58,9 +58,9 @@ Router.get("/getMovie/:id" , (req , res, next)=>{
 Router.put("/UPDATE/:id" , (req , res, next)=>{
   try {
       let {id} = req.params;
-      let {title,release_date,poster_path,overview}=req.body;
-      let sql = `UPDATE movie SET title=$1,release_date=$2,poster_path=$3,overview=$4 where id=${id}`; 
-      client.query(sql , [title,release_date,poster_path,overview]).then(()=>{
+      let {title,release_date,poster_path,overview,comment}=req.body;
+      let sql = `UPDATE movie SET title=$1,release_date=$2,poster_path=$3,overview=$4,comment=$5 where id=${id}`; 
+      client.query(sql , [title,release_date,poster_path,overview,comment]).then(()=>{
       res.status(200).send("updated successfully");
   }) 
   } catch (error) {
