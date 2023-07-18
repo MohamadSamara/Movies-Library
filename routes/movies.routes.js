@@ -19,10 +19,11 @@ Router.post("/addMovie" , (req , res, next)=>{
     let title = req.body.title;
     let release_date = req.body.release_date;
     let poster_path = req.body.poster_path;
-    let overview = req.body.overview; 
+    let overview = req.body.overview;
+    let comment = req.body.comment; 
   
-    let sql = `insert into movie(title,release_date,poster_path,overview) values($1,$2,$3,$4)`;
-    client.query(sql,[title,release_date,poster_path,overview]).then(()=>{
+    let sql = `insert into movie(title,release_date,poster_path,overview,comment) values($1,$2,$3,$4,$5)`;
+    client.query(sql,[title,release_date,poster_path,overview,comment]).then(()=>{
       res.status(201).send(`movie ${title} added`);
     }) 
   } catch (error) {
